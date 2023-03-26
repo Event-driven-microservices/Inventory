@@ -5,9 +5,6 @@ import static com.microservices.inventory.content.product.adapter.out.persistenc
 import com.microservices.inventory.content.product.application.service.ports.out.ProductRepositoryPort;
 import com.microservices.inventory.content.product.domain.models.Product;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +14,6 @@ import org.springframework.stereotype.Repository;
 public class ProductRepository implements ProductRepositoryPort {
 
   @Autowired private ProductJpaRepository productJpaRepository;
-
-  @Autowired private ProductSpecJpaRepository productSpecJpaRepository;
 
   @Override
   public Product get(Long id) {
@@ -55,13 +50,6 @@ public class ProductRepository implements ProductRepositoryPort {
   @Override
   public Page<Product> findAll(Pageable pageable) {
     return (productJpaRepository.findAll(pageable).map(INSTANCE::toDomainModel));
-  }
-
-  @Override
-  public Set<Product> findAllByIdIn(List<Long> ids) {
-    return productJpaRepository.findAllByIdIn(ids).stream()
-        .map(INSTANCE::toDomainModel)
-        .collect(Collectors.toSet());
   }
 
   public Product save(Product product) {
